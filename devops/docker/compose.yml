@@ -1,0 +1,23 @@
+# Use this docker-compose file to run the app and a Postgres database
+services:
+  app:
+    build:
+      context: ../..
+      dockerfile: devops/docker/Dockerfile
+    container_name: app
+    image: marciogabriel1998/todo-project:latest
+    ports:
+      - "3000:3000"
+  db:
+    image: postgres:15
+    container_name: db
+    environment:
+      POSTGRES_USER: ${DB_USERNAME}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME}
+    ports:
+      - "5432:5432"
+    volumes:
+      - todo-app-db-volume:/var/lib/postgresql/data
+volumes:
+  todo-app-db-volume:

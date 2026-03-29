@@ -12,17 +12,22 @@ My goal as a DevOps Engineer is to configure and adapt this project to be produc
 
 ## Folder Structure
 ```
-/ (root)
-├── api.http                  # REST Client requests for API testing
-├── devops.md                 # DevOps and deployment instructions
-├── nest-cli.json             # NestJS CLI configuration
-├── package.json              # Project metadata and npm scripts
-├── tsconfig.json             # TypeScript configuration
-├── tsconfig.build.json       # TypeScript build configuration
+todo-project/
+├── .env                        # Environment variables for local/dev/prod
+├── api.http                    # REST Client requests for API testing
+├── devops.md                   # DevOps and deployment instructions
+├── devops/
+│   └── docker/
+│       ├── Dockerfile          # Docker build instructions for the app
+│       └── compose.yml         # Docker Compose for local/dev
+├── nest-cli.json               # NestJS CLI configuration
+├── package.json                # Project metadata and npm scripts
+├── tsconfig.json               # TypeScript configuration
+├── tsconfig.build.json         # TypeScript build configuration
 ├── src/
-│   ├── app.module.ts         # Main application module
-│   ├── app.module.spec.ts    # App module tests
-│   ├── main.ts               # Application entry point
+│   ├── app.module.ts           # Main application module
+│   ├── app.module.spec.ts      # App module tests
+│   ├── main.ts                 # Application entry point
 │   └── todos/
 │       ├── todos.controller.ts       # Todos API controller
 │       ├── todos.controller.spec.ts  # Todos controller tests
@@ -34,6 +39,7 @@ My goal as a DevOps Engineer is to configure and adapt this project to be produc
 │       │   └── update-todo.dto.ts    # DTO for updating todos
 │       └── entities/
 │           └── todo.entity.ts        # Todo entity definition
+├── README.md                   # Project overview and usage
 ```
 
 ## Available npm Commands
