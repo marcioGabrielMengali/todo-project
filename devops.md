@@ -59,5 +59,42 @@ todo-project       v1        3df860c416de   507MB
 
 ---
 
+## 🟢 Phase 2: Docker & Compose Optimization
+
+### Steps
+
+1. **Optimize Dockerfile**
+	- Improved layer usage and cache efficiency for smaller, faster builds.
+	- Switched to a multi-stage build to keep only production dependencies and build output in the final image.
+2. **Enhance Compose File**
+	- Added healthchecks and restart policies for resilience.
+	- Introduced container resource limits (CPU & memory) for deployment.
+	- Added a custom network and depends_on with healthcheck for service startup order.
+
+### Commands Used
+
+```sh
+docker build -t todo-project:v2 -f devops/docker/Dockerfile .
+docker image ls
+```
+
+#### Example Image Size Reduction
+```
+REPOSITORY         TAG       IMAGE ID       SIZE
+todo-project       v2        919c8ad05b3f   121MB
+```
+
+```sh
+docker tag todo-project:v2 marciogabriel1998/todo-project:latest
+docker push marciogabriel1998/todo-project:latest
+```
+
+To clean up containers and volumes:
+```sh
+docker compose -f devops/docker/compose.yml down -v
+```
+
+---
+
 ## 📝 Notes
 - All commands should be run from the project root.

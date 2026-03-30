@@ -1,0 +1,10 @@
+# Ignore files and folders not needed in the Docker image
+.nvmrc
+README.md
+*.md
+*.http
+.gitignore
+.dockerignore
+devops/
+dist/
+node_modules/

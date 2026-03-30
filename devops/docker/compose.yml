@@ -8,6 +8,23 @@ services:
     image: marciogabriel1998/todo-project:latest
     ports:
       - "3000:3000"
+    networks:
+      - todo-app-network
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          memory: 256M
+          cpus: '0.50'
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 10s
   db:
     image: postgres:15
     container_name: db
@@ -19,5 +36,22 @@ services:
       - "5432:5432"
     volumes:
       - todo-app-db-volume:/var/lib/postgresql/data
+    networks:
+      - todo-app-network
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          memory: 256M
+          cpus: '0.50'
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 10s
 volumes:
   todo-app-db-volume:
+networks:
+  todo-app-network:
+    driver: bridge
