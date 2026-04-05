@@ -7,12 +7,14 @@ This document provides a professional, step-by-step guide to take this project f
 ## 📁 Project Folder Structure
 
 ```
-todo-project/
-├── devops.md                   # DevOps and deployment instructions (this file)
-├── devops/
-│   └── docker/
-│       ├── Dockerfile          # Docker build instructions for the app
-│       └── compose.yml         # Docker Compose for local/development
+devops/
+├── docker/
+│   ├── Dockerfile
+│   └── compose.yml
+├── security-reports/
+│   ├── trivy-fs.txt
+│   ├── trivy-image.txt
+│   └── sbom-image-cyclonedx.json
 ```
 
 ---
@@ -76,6 +78,8 @@ todo-project       v1        3df860c416de   507MB
 ```sh
 docker build -t todo-project:v2 -f devops/docker/Dockerfile .
 docker image ls
+
+docker compose -f devops/docker/compose.yml --env-file .env up -d
 ```
 
 #### Example Image Size Reduction
@@ -91,10 +95,54 @@ docker push marciogabriel1998/todo-project:latest
 
 To clean up containers and volumes:
 ```sh
-docker compose -f devops/docker/compose.yml down -v
+docker compose -f devops/docker/compose.yml --env-file .env down -v
 ```
+
+---
+
+## 🟢 Phase 3: Security Scanning with Trivy
+
+In this phase, we introduce automated security scanning into the workflow. We use Trivy to scan both the project files and the Docker image for vulnerabilities, misconfigurations, secrets, and license issues. This ensures that the application and its dependencies are safe before deploying to production. Additionally, we generate a Software Bill of Materials (SBOM), which is a comprehensive list of all components, dependencies, and their versions included in the image. The SBOM is essential for transparency, compliance, and tracking potential vulnerabilities in the supply chain.
+
+### Steps
+
+1. **Scan project files for vulnerabilities**
+   ```sh
+   trivy fs . \
+     --scanners vuln,misconfig,secret,license \
+     --severity HIGH,CRITICAL \
+     --format table \
+     --output devops/security-reports/trivy-fs.txt
+   ```
+2. **Build the Docker image**
+   ```sh
+   docker build -t todo-project:v3 -f devops/docker/Dockerfile .
+   ```
+3. **Scan the Docker image for vulnerabilities**
+   ```sh
+   trivy image todo-project:v3 \
+     --scanners vuln,misconfig,secret,license \
+     --severity HIGH,CRITICAL \
+     --format table \
+     --output devops/security-reports/trivy-image.txt
+   ```
+4. **Generate the SBOM (Software Bill of Materials)**
+   ```sh
+   trivy image todo-project:v3 \
+     --format cyclonedx \
+     --output devops/security-reports/sbom-image-cyclonedx.json
+   ```
+5. **Tag and push the image**
+   ```sh
+   docker tag todo-project:v3 marciogabriel1998/todo-project:v3
+   docker tag todo-project:v3 marciogabriel1998/todo-project:latest
+
+   docker push marciogabriel1998/todo-project:v3
+   docker push marciogabriel1998/todo-project:latest
+   ```
 
 ---
 
 ## 📝 Notes
 - All commands should be run from the project root.
+
