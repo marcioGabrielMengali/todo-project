@@ -11,6 +11,11 @@ devops/
 ├── docker/
 │   ├── Dockerfile
 │   └── compose.yml
+├── k8s/
+│   ├── deployment.yml
+│   └── secret.yml
+├── kind/
+│   └── kind-config.yml
 ├── security-reports/
 │   ├── trivy-fs.txt
 │   ├── trivy-image.txt
