@@ -143,6 +143,39 @@ In this phase, we introduce automated security scanning into the workflow. We us
 
 ---
 
+## 🟢 Phase 4: Kubernetes Deployment with Kind
+
+In this phase, we create a local Kubernetes cluster using Kind to orchestrate and deploy the application. The cluster will have three control plane nodes and multiple worker nodes, with Calico as the Container Network Interface (CNI) for networking.
+
+### Steps
+
+1. **Create a local Kubernetes cluster with Kind**
+   ```sh
+   kind create cluster --config devops/kind/kind-config.yml --name local-cluster
+   ```
+
+2. **Verify cluster connectivity**
+   ```sh
+   kubectl cluster-info --context kind-local-cluster
+   ```
+
+3. **Check cluster nodes and wait for readiness**
+   ```sh
+   kubectl get nodes
+   ```
+
+4. **Verify API resources and cluster configuration**
+   ```sh
+   kubectl api-resources
+   ```
+
+### Configuration Notes
+- **Cluster Name**: `local-cluster`
+- **Port**: `3000` (mapped from host)
+- **CNI**: Calico (CNI plugin disabled by default in Kind config)
+- **Control Plane Nodes**: 3
+- **Worker Nodes**: Multiple (as per Kind config)
+
 ## 📝 Notes
 - All commands should be run from the project root.
 

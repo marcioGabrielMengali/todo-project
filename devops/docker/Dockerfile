@@ -33,7 +33,6 @@ RUN npm ci --only=production
 
 # Copy built app and env from builder (node_modules already installed above via npm ci --only=production)
 COPY --from=builder /app/dist ./dist
-COPY --from=builder /app/.env ./
 
 RUN chown -R app:app /app
 
