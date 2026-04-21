@@ -176,6 +176,44 @@ In this phase, we create a local Kubernetes cluster using Kind to orchestrate an
 - **Control Plane Nodes**: 3
 - **Worker Nodes**: Multiple (as per Kind config)
 
+---
+
+## 🟢 Phase 5: Kubernetes Manifests Deployment
+
+In this phase, we deploy the application to Kubernetes using manifest files managed with kubectl. The setup uses a Secret for environment configuration and a Deployment manifest that includes the database, the application, and their corresponding Services. The deployment also defines readiness and liveness probes, along with the image pull policy required for reliable pod startup.
+
+### Steps
+
+1. **Apply the Secret manifest**
+   ```sh
+   kubectl apply -f devops/k8s/secret.yml
+   ```
+
+2. **Verify the Secret was created**
+   ```sh
+   kubectl get secrets
+   kubectl describe secret app-secret
+   ```
+
+3. **Apply the Deployment and Service manifests**
+   ```sh
+   kubectl apply -f devops/k8s/deployment.yml
+   ```
+
+4. **Clean up the Kubernetes resources**
+   ```sh
+   kubectl delete -f devops/k8s/secret.yml
+   kubectl delete -f devops/k8s/deployment.yml
+   kind delete cluster --name local-cluster
+   ```
+
+### What Was Configured
+- A Secret for application and database environment variables.
+- Deployments for the Postgres database and the NestJS application.
+- Services for internal database access and application exposure.
+- Readiness and liveness probes for health monitoring.
+- Image pull policy for controlled image retrieval.
+
 ## 📝 Notes
 - All commands should be run from the project root.
 
